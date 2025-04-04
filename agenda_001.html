@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda Mãe Rainha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h2>Cadastro da Imagem</h2>
+  <form id="formulario">
+    <label>Responsável:
+      <input type="text" id="responsavel" required>
+    </label>
+    <label>Apartamento:
+      <input type="text" id="apartamento" required>
+    </label>
+    <label>Data de Recebimento:
+      <input type="date" id="recebimento" required>
+    </label>
+    <label>Data de Entrega:
+      <input type="date" id="entrega">
+    </label>
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <script>
+    document.getElementById("formulario").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const dados = {
+        responsavel: document.getElementById("responsavel").value,
+        apartamento: document.getElementById("apartamento").value,
+        recebimento: document.getElementById("recebimento").value,
+        entrega: document.getElementById("entrega").value
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbyBSWAAzMfAsiHhHlTcNMTMKhCXEbeDH-wmr2iGj3wGYUKgcf6thSfMsZ3ofYJPZnGd/exec", {
+        method: "POST",
+        body: JSON.stringify(dados),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao enviar. Código: " + res.status);
+        return res.json();
+      })
+      .then(resp => {
+        if (resp.status === "sucesso") {
+          alert("Cadastro realizado com sucesso!");
+          document.getElementById("formulario").reset();
+        } else {
+          alert("Erro: " + resp.mensagem);
+        }
+      })
+      .catch(err => {
+        alert("Erro ao enviar dados: " + err.message);
+      });
+    });
+  </script>
+</body>
+</html>
