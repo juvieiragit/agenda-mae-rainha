@@ -1,91 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda Mãe Rainha</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 400px;
-      margin: auto;
-    }
-    h2 {
-      text-align: center;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Mãe Rainha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-  <h2>Cadastro da Imagem</h2>
-  <form id="formulario">
-    <label>Responsável:
-      <input type="text" id="responsavel" required>
-    </label>
-    <label>Apartamento:
-      <input type="text" id="apartamento" required>
-    </label>
-    <label>Data de Recebimento:
-      <input type="date" id="recebimento" required>
-    </label>
-    <label>Data de Entrega:
-      <input type="date" id="entrega">
-    </label>
-    <button type="submit">Cadastrar</button>
-  </form>
 
-  <script>
-    document.getElementById("formulario").addEventListener("submit", function(e) {
-      e.preventDefault();
+    <h2>Cadastro de Agenda</h2>
+    
+    <form id="formAgenda">
+        <input type="text" id="responsavel" placeholder="Nome do responsável" required>
+        <input type="text" id="apartamento" placeholder="Número do apartamento" required>
+        <input type="date" id="recebimento" required>
+        <input type="date" id="entrega" required>
+        <button type="submit">Enviar</button>
+    </form>
 
-      const dados = {
-        responsavel: document.getElementById("responsavel").value,
-        apartamento: document.getElementById("apartamento").value,
-        recebimento: document.getElementById("recebimento").value,
-        entrega: document.getElementById("entrega").value
-      };
+    <p id="mensagem"></p>
 
-      fetch("https://script.google.com/macros/s/AKfycbycNUrokFfUf8fTnup9iqYwlkLwBwK56Yb6mOg3SBYT52h5kaAbKVlp6izPnAa28KxJ/exec", {
-        method: "POST",
-        body: JSON.stringify(dados),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => {
-        if (!res.ok) throw new Error("Erro ao enviar. Código: " + res.status);
-        return res.json();
-      })
-      .then(resp => {
-        if (resp.status === "sucesso") {
-          alert("Cadastro realizado com sucesso!");
-          document.getElementById("formulario").reset();
-        } else {
-          alert("Erro: " + resp.mensagem);
-        }
-      })
-      .catch(err => {
-        alert("Erro ao enviar dados: " + err.message);
-      });
-    });
-  </script>
+    <script>
+        document.getElementById("formAgenda").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const apiUrl = "https://script.google.com/macros/s/AKfycbycNUrokFfUf8fTnup9iqYwlkLwBwK56Yb6mOg3SBYT52h5kaAbKVlp6izPnAa28KxJ/exec"; // Substitua pelo link correto da sua API
+
+            const dados = {
+                responsavel: document.getElementById("responsavel").value,
+                apartamento: document.getElementById("apartamento").value,
+                recebimento: document.getElementById("recebimento").value,
+                entrega: document.getElementById("entrega").value
+            };
+
+            fetch(apiUrl, {
+                method: "POST",
+                mode: "no-cors", // Isso evita problemas com CORS
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(() => {
+                document.getElementById("mensagem").innerText = "Dados enviados com sucesso!";
+                document.getElementById("mensagem").style.color = "green";
+                document.getElementById("formAgenda").reset();
+            })
+            .catch(error => {
+                document.getElementById("mensagem").innerText = "Erro ao enviar dados.";
+                document.getElementById("mensagem").style.color = "red";
+            });
+        });
+    </script>
+
 </body>
 </html>
