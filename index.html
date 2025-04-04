@@ -1,39 +1,117 @@
-<script>
-  document.getElementById("formAgenda").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const responsavel = document.getElementById("responsavel").value;
-    const bloco = document.getElementById("bloco").value;
-    const apartamento = document.getElementById("apartamento").value;
-    const recebimento = document.getElementById("recebimento").value;
-    const entrega = document.getElementById("entrega").value;
-
-    const dados = {
-      responsavel,
-      apartamento: bloco + apartamento, // Exemplo: "A101"
-      recebimento,
-      entrega
-    };
-
-    try {
-      const resposta = await fetch("https://script.google.com/macros/s/AKfycbwJ6-QNvpyRcYnPg54SV8ZhxiMFAihKS2e72SwQr_tIvhz2_m0v9GB6vUtvlwPN4iEB/exec", {
-        method: "POST",
-        body: JSON.stringify(dados),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const resultado = await resposta.json();
-
-      if (resultado.status === "sucesso") {
-        alert("Cadastro realizado com sucesso!");
-        document.getElementById("formAgenda").reset();
-      } else {
-        alert("Erro ao enviar dados: " + resultado.mensagem);
-      }
-    } catch (erro) {
-      alert("Erro ao enviar dados: " + erro.message);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agenda Mãe Rainha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background: #f0f0f0;
     }
-  });
-</script>
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .mensagem {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <form id="agendaForm">
+    <h2>Cadastro da Imagem da Mãe Rainha</h2>
+
+    <label for="responsavel">Responsável:</label>
+    <input type="text" id="responsavel" name="responsavel" required />
+
+    <label for="apartamento">Apartamento:</label>
+    <input type="text" id="apartamento" name="apartamento" required />
+
+    <label for="bloco">Bloco:</label>
+    <select id="bloco" name="bloco" required>
+      <option value="">Selecione</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+    </select>
+
+    <label for="recebimento">Data de Recebimento:</label>
+    <input type="date" id="recebimento" name="recebimento" required />
+
+    <label for="entrega">Data de Entrega:</label>
+    <input type="date" id="entrega" name="entrega" required />
+
+    <button type="submit">Enviar</button>
+    <div class="mensagem" id="mensagem"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("agendaForm");
+    const mensagem = document.getElementById("mensagem");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      mensagem.textContent = "Enviando...";
+
+      const dados = {
+        responsavel: form.responsavel.value,
+        apartamento: form.apartamento.value,
+        bloco: form.bloco.value,
+        recebimento: form.recebimento.value,
+        entrega: form.entrega.value,
+      };
+
+      try {
+        const resposta = await fetch("https://script.google.com/macros/s/AKfycbwJ6-QNvpyRcYnPg54SV8ZhxiMFAihKS2e72SwQr_tIvhz2_m0v9GB6vUtvlwPN4iEB/exec", {
+          method: "POST",
+          body: JSON.stringify(dados),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const resultado = await resposta.json();
+        if (resultado.status === "sucesso") {
+          mensagem.textContent = "Cadastro realizado com sucesso!";
+          form.reset();
+        } else {
+          mensagem.textContent = "Erro: " + resultado.mensagem;
+        }
+      } catch (erro) {
+        mensagem.textContent = "Erro ao enviar dados: " + erro.message;
+      }
+    });
+  </script>
+</body>
+</html>
