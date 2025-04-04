@@ -1,113 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agenda Devocional - Mãe Rainha</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 1em;
-      background-color: #f7f7f7;
+      margin: 20px;
+      padding: 0;
+      background-color: #f4f4f4;
     }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
     form {
-      background-color: #fff;
-      padding: 1em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 400px;
+      max-width: 500px;
       margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    input, select, button {
+
+    label {
       display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    input, select {
       width: 100%;
-      margin-bottom: 1em;
-      padding: 10px;
-      font-size: 16px;
+      padding: 8px;
+      box-sizing: border-box;
     }
+
     button {
-      background-color: #4CAF50;
-      color: white;
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #2e7d32;
+      color: #fff;
       border: none;
+      border-radius: 4px;
+      font-size: 16px;
       cursor: pointer;
-      font-weight: bold;
     }
+
     button:hover {
-      background-color: #45a049;
+      background-color: #1b5e20;
     }
+
     .mensagem {
       text-align: center;
-      margin-top: 1em;
-      font-weight: bold;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
-  <h2>Agenda Devocional - Mãe Rainha</h2>
-
+  <h1>Agenda Devocional</h1>
   <form id="formAgenda">
-    <input type="text" id="responsavel" placeholder="Nome do responsável" required>
-    <input type="text" id="apartamento" placeholder="Número do apartamento" required>
+    <label for="responsavel">Responsável:</label>
+    <input type="text" id="responsavel" name="responsavel" required />
+
+    <label for="apartamento">Apartamento:</label>
+    <input type="text" id="apartamento" name="apartamento" required />
 
     <label for="bloco">Bloco:</label>
-    <select id="bloco" required>
-      <option value="">Selecione o bloco</option>
-      <option value="A">Bloco A</option>
-      <option value="B">Bloco B</option>
+    <select id="bloco" name="bloco" required>
+      <option value="">Selecione</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
     </select>
 
-    <label for="recebimento">Data de recebimento:</label>
-    <input type="date" id="recebimento" required>
+    <label for="recebimento">Data de Recebimento:</label>
+    <input type="date" id="recebimento" name="recebimento" required />
 
-    <label for="entrega">Data de entrega:</label>
-    <input type="date" id="entrega" required>
+    <label for="entrega">Data de Entrega:</label>
+    <input type="date" id="entrega" name="entrega" required />
 
     <button type="submit">Enviar</button>
+    <div class="mensagem" id="mensagem"></div>
   </form>
 
-  <div class="mensagem" id="mensagem"></div>
-
   <script>
-    const form = document.getElementById('formAgenda');
-    const mensagem = document.getElementById('mensagem');
-
-    form.addEventListener('submit', async (e) => {
+    document.getElementById("formAgenda").addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const dados = {
         responsavel: document.getElementById("responsavel").value,
         apartamento: document.getElementById("apartamento").value,
         bloco: document.getElementById("bloco").value,
-        recebimento: document.getElementById("recebimento").value,
-        entrega: document.getElementById("entrega").value
-      };
-
-      try {
-        const resposta = await fetch('https://script.google.com/macros/s/AKfycbycNUrokFfUf8fTnup9iqYwlkLwBwK56Yb6mOg3SBYT52h5kaAbKVlp6izPnAa28KxJ/exec', {
-          method: 'POST',
-          body: JSON.stringify(dados),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const resultado = await resposta.json();
-
-        if (resultado.status === "sucesso") {
-          mensagem.textContent = "Registro enviado com sucesso!";
-          mensagem.style.color = "green";
-          form.reset();
-        } else {
-          mensagem.textContent = "Erro: " + resultado.mensagem;
-          mensagem.style.color = "red";
-        }
-      } catch (error) {
-        mensagem.textContent = "Erro ao enviar dados: " + error;
-        mensagem.style.color = "red";
-      }
-    });
-  </script>
-
-</body>
-</html>
